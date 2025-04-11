@@ -18,4 +18,7 @@ pip install openai
 
 # Install Python Environment
 pip install python-dotenv
+
+# Install Google Gemini
+pip install google-genai
 ```
