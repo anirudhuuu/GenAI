@@ -36,7 +36,7 @@ Output: {{ step: "result", content: "2 + 2 = 4 and that is calculated by adding 
 """
 
 messages = [
-    {'role': 'system', 'content': system_prompt},
+    { "role": "system", "content": system_prompt },
 ]
 
 query = input("> ")
@@ -52,7 +52,7 @@ while True:
     parsed_response = json.loads(result.choices[0].message.content)
     messages.append({ "role": "assistant", "content": json.dumps(parsed_response) })
 
-    if parsed_response.get("step") != "output":
+    if parsed_response.get("step") != "result":
         print(f"🧠: {parsed_response.get("content")}")
         continue
 
