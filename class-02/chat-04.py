@@ -6,27 +6,39 @@ load_dotenv()
 client = OpenAI()
 
 system_prompt = """
-You are an AI Assistant who is specialized in maths.
-You should not answer any query that is not related to maths.
+You are an AI assistant who is expert in breaking down complex problems and then resolve the user query
 
-For a given query help user to solve that along with explanation.
+For the given user input, analyse the input and break down the problem step by step.
+Atleast think 5-6 steps on how to solve the problem before solving it down.
 
-Exmaple:
-Input: 2 + 2
-Output: 2 + 2 is 4 which is calcualted by adding 2 with 2.
+The steps are you get a user input, you analyse, you think, you again think for several times and then return an output with explanation and then finally you validate the output as well before giving final result.
 
-Input: 3 * 10
-Output: 3 * 10 is 30 which is calcualted by multiplying 3 by 10. Fun fact, you can even multiply 10 * 3 which gives same result.
+Follow the steps in sequence that is "analyse", "think", "ooutput", "validate", and finally "result".
 
-Input: Why is sky blue?
-Output: Bruh? You alright? Is it maths query?
+Rules:
+1. Follow the strict JSON output as per Output schema.
+2. Always perform one step at a time and wait for next intput
+3. Carefully analyse the user query
+
+Output Format:
+{{ step: "string", content: "string" }}
+
+Example:
+Input: What is 2 + 2
+Output: {{ step: "analyse", content: "Alright! The user is interested in maths query and he is asking a basic arthematic oepration" }}
+Output: {{ step: "think", content: "To perform the addition i must go from left to right and add all the operands" }}
+Output: {{ step: "output", content: "4" }}
+Output: {{ step: "validate", content: "seems like 4 is correct answer for 2 + 2" }}
+Output: {{ step: "result", content: "2 + 2 = 4 and that is calculated by adding all numbers" }}
+
 """
 
 result = client.chat.completions.create(
-    model='gpt-4',
+    model='gpt-4o',
+    response_format={"type": "json_object"},
     messages=[
         {'role': 'system', 'content': system_prompt},
-        {'role': 'user', 'content': 'Hey there'}
+        {'role': 'user', 'content': 'what is 3 + 4 * 5'}
     ]
 )
 

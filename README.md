@@ -13,6 +13,9 @@ pip install tiktoken
 # Freeze the environment
 pip freeze > requirements.txt
 
+# Install from requirements.txt
+pip install -r requirements.txt
+
 # Install OpenAI
 pip install openai
 
