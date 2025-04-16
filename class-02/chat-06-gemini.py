@@ -1,11 +1,14 @@
 # Automation
-import os
 import json
-from google import genai
-from google.genai import types
+import os
+from openai import OpenAI
 
 api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
+
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
 
 system_prompt = """
 You are an AI assistant who is expert in breaking down complex problems and then resolve the user query
@@ -35,23 +38,22 @@ Output: {{ step: "result", content: "2 + 2 = 4 and that is calculated by adding 
 
 """
 
-messages = []
+messages = [
+    { "role": "system", "content": system_prompt },
+]
 
 query = input("> ")
-messages.append(query)
+messages.append({ "role": "user", "content": query })
 
 while True:
-    response = client.models.generate_content(
-        model='gemini-2.0-flash-001',
-        config=types.GenerateContentConfig(
-            system_instruction=system_prompt
-        ),
-        contents=messages,
+    result = client.chat.completions.create(
+        model='gemini-2.0-flash',
+        response_format={"type": "json_object"},
+        messages=messages
     )
 
-    clean_text = response.text.strip().removeprefix("```json").removesuffix("```").strip()
-    parsed_response = json.loads(clean_text)
-    messages.append(clean_text)
+    parsed_response = json.loads(result.choices[0].message.content)
+    messages.append({ "role": "assistant", "content": json.dumps(parsed_response) })
 
     if parsed_response.get("step") != "result":
         print(f"🧠: {parsed_response.get("content")}")
