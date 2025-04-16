@@ -1,10 +1,13 @@
-import os
 import json
-from google import genai
-from google.genai import types
+import os
+from openai import OpenAI
 
 api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
+
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
 
 def get_weather(city: str):
     # TODO: Perform an actual API call
@@ -21,7 +24,6 @@ system_prompt = """
     - Follow the Output JSON Format.
     - Always perform one step at a time and wait for next intput 
     - Carefully analyse the user query
-    - json response values having null must be replaced with None as per python standard
 
     Output JSON Format:
     {{
@@ -43,20 +45,26 @@ system_prompt = """
     Output: {{ "step": "output", "content": "The weather for new york seems to be 12 degrees." }}
 """
 
-response = client.models.generate_content(
-    model='gemini-2.0-flash-001',
-    config=types.GenerateContentConfig(
-        system_instruction=system_prompt
-    ),
-    contents=[
-        'What is the current weather of Hyderabad?',
+response = client.chat.completions.create(
+    model='gemini-2.0-flash',
+    response_format={"type": "json_object"},
+    messages=[
+        { 'role': 'system', 'content': system_prompt },
+        { 'role': 'user', 'content': 'What is the current weather of Hyderabad?' },
+
         # Manual addition
-        json.dumps({ "step": "plan", "content": "The user is asking for the current weather of Hyderabad." }),
-        json.dumps({ "step": "plan", "content": "I should use the 'get_weather' tool to find the weather information." }),
-        json.dumps({ "step": "action", "content": "Call the 'get_weather' tool to fetch the weather information for Hyderabad.", "function": "get_weather", "input": "Hyderabad" }),
-        json.dumps({ "step": "observe", "output": "29 degrees Celcius, clear sky" }),
-        json.dumps({ "step": "output", "content": "The current weather in Hyderabad is 29 degrees Celcius with a clear sky.", "function": None, "input": None }),
-    ],
+        { 'role': 'assistant', 'content': json.dumps({ "step": "plan", "content": "The user wants to know the current weather in Hyderabad.", "function": None, "input": None }) },
+        { 'role': 'assistant', 'content': json.dumps({ "step": "plan", "content": "I should use the 'get_weather' tool to find the weather information for Hyderabad.", "function": None, "input": None }) },
+        { 'role': 'assistant', 'content': json.dumps({ "step": "action", "content": "Call get_weather function to get weather details for Hyderabad", "function": "get_weather", "input": "Hyderabad" }) },
+        { 'role': 'assistant', 'content': json.dumps({ "step": "observe", "output": "The current weather in Hyderabad is 30 degrees Celsius, with clear skies and a light breeze." }) },
+    ]
 )
 
-print(response.text)
+print(response.choices[0].message.content)
+
+# {
+#     "step": "output",
+#     "content": "The current weather in Hyderabad is 30 degrees Celsius, with clear skies and a light breeze.",
+#     "function": null,
+#     "input": null
+# }
