@@ -1,16 +1,20 @@
-from google import genai
-from google.genai import types
+from openai import OpenAI
 import os
 
 api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
 
-response = client.models.generate_content(
-    model='gemini-2.0-flash-001',
-    config=types.GenerateContentConfig(
-        system_instruction='You are an ai assistant whose name is ChaiCode'
-    ),
-    contents='Hey there, what is your name? I am Anirudh',
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
 )
 
-print(response.text)
+result = client.chat.completions.create(
+    model='gemini-2.0-flash',
+    messages=[
+        # System prompt
+        {'role': 'system', 'content': 'You are an ai assistant whose name is ChaiCode'},
+        {'role': 'user', 'content': 'Hey there, what is your name? I am Anirudh'}
+    ]
+)
+
+print(result.choices[0].message.content)
