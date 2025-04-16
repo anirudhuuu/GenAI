@@ -8,6 +8,9 @@ load_dotenv()
 
 client = OpenAI()
 
+def query_db(sql):
+    pass
+
 def get_weather(city: str):
     # TODO: Perform an actual API call
     print("🔨 Tool Called: get_weather", city)

@@ -11,6 +11,9 @@ client = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
 )
 
+def query_db(sql):
+    pass
+
 def get_weather(city: str):
     # TODO: Perform an actual API call
     print("🔨 Tool Called: get_weather", city)
