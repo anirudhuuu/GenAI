@@ -24,10 +24,18 @@ def get_weather(city: str):
 
     return "Something went wrong"
 
+def add(x, y):
+    print("🔨 Tool Called: add", x, y)
+    return x + y
+
 available_tools = {
     "get_weather": {
         "fn": get_weather,
         "description": "Takes a city name as an input and returns the current weather of that city.",
+    },
+    "add": {
+        "fn": add,
+        "description": "Takes two numbers x and y and returns the sum of the given input that is x + y",
     }
 }
 
@@ -53,6 +61,7 @@ system_prompt = f"""
 
     Available Tools:
     - get_weather: Takes a city name as an input and returns the current weather of that city.
+    - add: Takes two numbers x and y and returns the sum of the given input that is x + y.
 
     Example:
     User Query:  What is the weather of new york?
