@@ -1,10 +1,13 @@
-import os
 import json
-from google import genai
-from google.genai import types
+import os
+from openai import OpenAI
 
 api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
+
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
 
 system_prompt = """
 You are an AI assistant who is expert in breaking down complex problems and then resolve the user query
@@ -34,19 +37,24 @@ Output: {{ step: "result", content: "2 + 2 = 4 and that is calculated by adding 
 
 """
 
-response = client.models.generate_content(
-    model='gemini-2.0-flash-001',
-    config=types.GenerateContentConfig(
-        system_instruction=system_prompt
-    ),
-    contents=[
-        'what is 3 + 4 * 5',
-        json.dumps({ "step": "analyse", "content": "The user is asking to evaluate the expression 3 + 4 * 5. This involves addition and multiplication." }),
-        json.dumps({ "step": "think", "content": "I need to remember the order of operations (PEMDAS/BODMAS). Multiplication comes before addition. So, I'll multiply 4 and 5 first, then add the result to 3." }),
-        json.dumps({ "step": "output", "content": "Following the order of operations, 4 * 5 = 20. Then, 3 + 20 = 23." }),
-        json.dumps({ "step": "validate", "content": "Let's re-check the calculation. 4 multiplied by 5 is indeed 20. Adding 3 to 20 gives 23. The order of operations was correctly applied." }),
-    ],
+result = client.chat.completions.create(
+    model='gemini-2.0-flash',
+    response_format={"type": "json_object"},
+    messages=[
+        {'role': 'system', 'content': system_prompt},
+        {'role': 'user', 'content': 'what is 3 + 4 * 5'},
+
+        # Manual addition of the assistant response
+        { "role": "assistant", "content": json.dumps({ "step": "analyse", "content": "The user has provided an expression that requires order of operations to solve correctly. The expression contains both addition and multiplication." }) },
+        { "role": "assistant", "content": json.dumps({ "step": "think", "content": "To solve this, I need to remember the order of operations (PEMDAS/BODMAS): Parentheses/Brackets, Exponents/Orders, Multiplication and Division (from left to right), and Addition and Subtraction (from left to right). In this case, multiplication should be performed before addition." }) },
+        { "role": "assistant", "content": json.dumps({ "step": "output", "content": "23" }) },
+        { "role": "assistant", "content": json.dumps({ "step": "validate", "content": "Let's check the calculation. 4 * 5 = 20, and then 3 + 20 = 23. So the answer is correct." }) }
+    ]
 )
 
-print(response.text)
-# Result:: { "step": "result", "content": "3 + 4 * 5 = 23. This is calculated by first multiplying 4 and 5 to get 20, and then adding 3 to 20." }
+print(result.choices[0].message.content)
+
+# {
+#   "step": "result",
+#   "content": "Following the order of operations, 3 + 4 * 5 = 3 + (4 * 5) = 3 + 20 = 23"
+# }
