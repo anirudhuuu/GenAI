@@ -1,6 +1,6 @@
 # Automation
 import json
-
+import requests
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -10,7 +10,16 @@ client = OpenAI()
 
 def get_weather(city: str):
     # TODO: Perform an actual API call
-    return "32 degree celcius"
+    print("🔨 Tool Called: get_weather", city)
+
+    url = f"https://wttr.in/{city}?format=%C+%t"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        return f"The weather in {city} is {response.text}"
+
+    return "Something went wrong"
 
 available_tools = {
     "get_weather": {
