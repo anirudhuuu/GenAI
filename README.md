@@ -24,4 +24,16 @@ pip install python-dotenv
 
 # Install Google Gemini
 pip install google-genai
+
+# Start Docker Compose
+docker compose up
+
+# Pull Ollama Image to Fast API Server
+python ollama_api.py
+
+# Install uvicorn
+pip install uvicorn
+
+# Start FastAPI Server
+uvicorn ollama_api:app --port 8000
 ```
