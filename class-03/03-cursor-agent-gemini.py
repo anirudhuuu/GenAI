@@ -11,6 +11,15 @@ client = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
 )
 
+def query_db(sql):
+    pass
+
+def run_command(command):
+    # execute command
+    # return result
+    result = os.system(command=command)
+    return result
+
 def get_weather(city: str):
     # TODO: Perform an actual API call
     print("🔨 Tool Called: get_weather", city)
@@ -28,6 +37,10 @@ available_tools = {
     "get_weather": {
         "fn": get_weather,
         "description": "Takes a city name as an input and returns the current weather of that city.",
+    },
+    "run_command": {
+        "fn": run_command,
+        "description": "Takes a command as input to execute on sustem and returns output.",
     },
 }
 
@@ -53,6 +66,7 @@ system_prompt = f"""
 
     Available Tools:
     - get_weather: Takes a city name as an input and returns the current weather of that city.
+    - run_command: Takes a command as input to execute on sustem and returns output.
 
     Example:
     User Query:  What is the weather of new york?
