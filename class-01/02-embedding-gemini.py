@@ -1,14 +1,18 @@
-from google import genai
+from openai import OpenAI
 import os
 
 api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
+
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+)
 
 text = "Eiffel Tower is in Paris and is a famous landmark, it is 324 meters tall"
 
-response = client.models.embed_content(
-    model = "gemini-embedding-exp-03-07",
-    contents = text
+response = client.embeddings.create(
+    model="text-embedding-004",
+    input=text
 )
 
-print("Vector Embeddings : ", response.embeddings)
+print("Vector Embeddings : ", response.data[0].embedding)
