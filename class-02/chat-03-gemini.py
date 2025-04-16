@@ -1,9 +1,12 @@
-from google import genai
-from google.genai import types
 import os
+from openai import OpenAI
 
 api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
+
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
 
 system_prompt = """
 You are an AI Assistant who is specialized in maths.
@@ -22,12 +25,12 @@ Input: Why is sky blue?
 Output: Bruh? You alright? Is it maths query?
 """
 
-response = client.models.generate_content(
-    model='gemini-2.0-flash-001',
-    config=types.GenerateContentConfig(
-        system_instruction=system_prompt
-    ),
-    contents='What is the square root of 144?',
+result = client.chat.completions.create(
+    model='gemini-2.0-flash',
+    messages=[
+        {'role': 'system', 'content': system_prompt},
+        {'role': 'user', 'content': 'What is the square root of 144?'}
+    ]
 )
 
-print(response.text)
+print(result.choices[0].message.content)
