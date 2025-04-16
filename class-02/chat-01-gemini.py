@@ -1,12 +1,18 @@
-from google import genai
+from openai import OpenAI
 import os
 
 api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
 
-response = client.models.generate_content(
-    model='gemini-2.0-flash-001',
-    contents='Why is the sky blue?'
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
-print(response.text)
+result = client.chat.completions.create(
+    model='gemini-2.0-flash',
+    messages=[
+        {'role': 'user', 'content': 'Hey there'} # Zero shot prompting
+    ]
+)
+
+print(result.choices[0].message.content)
