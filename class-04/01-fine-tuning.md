@@ -15,4 +15,30 @@ So we can consider that OpenAI and Google have already done the heavy lifting of
 
 Additionally, we can train these fine-tuned models on a specific domain or task, like medical data, legal data, etc. to make them act like agents in those domains.
 
-![Diagram of Domain Specific Training](./images/02-diagram.png)
+Additionally, we can also train it task specific based on a lableled dataset. For example, we can train a model to classify text into different categories, or to generate text based on a specific prompt.
+
+![Diagram of Domain & Task Specific Training](./images/02-diagram.png)
+
+## Fine tuning strategies
+
+1. Full parameter fine-tuning
+2. LoRA (Low-Rank Adaptation) fine-tuning
+
+### Full parameter fine-tuning
+
+Ultimately when we talk about a transformer, at the end its a neural network. They have various layers and parameters and weights that are used to predict. When a base model is fine-tuned, and you actually change actual weights of the model, this is called full parameter fine-tuning. This is the most expensive and time consuming way to fine-tune a model. It requires a lot of compute and data to do this.
+
+- Weights: The parameters of the model that are learned during training. They are used to make predictions.
+
+- Layers: The different levels of the model that process the input data. Each layer has its own set of weights and biases.
+
+> In neural networks, weights are numerical values that determine the strength of connections between neurons (or nodes). They essentially control how much influence one neuron's output has on another neuron's input. These weights are learned and adjusted during the training process, allowing the network to learn patterns and make predictions.
+
+> Backpropagation is a training algorithm for neural networks that uses a backward pass to adjust model parameters (weights and biases) based on the network's performance error. It's a crucial method for minimizing errors and improving the network's ability to make accurate predictions.
+
+**Cons of full parameter fine-tuning:**
+
+- High GPU cost
+- High Energy cost
+- High Hardware cost
+- Self host cost
