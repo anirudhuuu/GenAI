@@ -1,44 +1,58 @@
 # Fine Tuning
 
-Fine-tuning is customizing a pre-trained model (like GPT or Gemini) on specific data to adapt it for a particular task or domain.
+Fine-tuning customizes a pre-trained model (like GPT or Gemini) on specific data to adapt it for a particular task or domain.
 
-You can do **Full fine-tuning**, parameter-efficient fine-tuning (PEFT) like **LoRA**, or instruction tuning depending on your needs and resources.
+You can use **Full fine-tuning**, parameter-efficient fine-tuning (PEFT) like **LoRA**, or instruction tuning depending on your goals and resources.
 
-- Full fine-tuning updates all model parameters, requiring lots of compute and data.
-- PEFT (like LoRA) updates only small added layers or parameters, making fine-tuning faster, cheaper, and efficient for large models.
+- **Full fine-tuning** updates all model parameters, requiring significant compute and data.
+- **PEFT** (like LoRA) introduces small trainable parameters (e.g., low-rank matrices) while keeping most of the model frozen, making it faster and cheaper for large models.
 
 ![Diagram of Fine-tuning](./images/01-diagram.png)
 
-By default the transformer models are built for next word prediction, but we can use them for other tasks like classification, summarization, etc. by fine-tuning them on specific datasets.
+Transformer models are primarily trained for tasks like next-token prediction, but fine-tuning allows adapting them for tasks such as classification, summarization, or domain-specific applications.
 
-So we can consider that OpenAI and Google have already done the heavy lifting of training the model on a large dataset, and now we can just fine-tune it on our specific dataset to get the best results.
+OpenAI and Google handle the heavy lifting of pre-training on massive datasets. Fine-tuning lets you adapt these models to your niche datasets for better performance.
 
-Additionally, we can train these fine-tuned models on a specific domain or task, like medical data, legal data, etc. to make them act like agents in those domains.
+You can fine-tune models for:
 
-Additionally, we can also train it task specific based on a lableled dataset. For example, we can train a model to classify text into different categories, or to generate text based on a specific prompt.
+- **Domain adaptation** (e.g., medical, legal data)
+- **Task-specific objectives** using labeled datasets (e.g., sentiment analysis, text generation).
 
 ![Diagram of Domain & Task Specific Training](./images/02-diagram.png)
 
-## Fine tuning strategies
+## Fine-tuning Strategies
 
 1. Full parameter fine-tuning
 2. LoRA (Low-Rank Adaptation) fine-tuning
 
-### Full parameter fine-tuning
+### Full Parameter Fine-tuning
 
-Ultimately when we talk about a transformer, at the end its a neural network. They have various layers and parameters and weights that are used to predict. When a base model is fine-tuned, and you actually change actual weights of the model, this is called full parameter fine-tuning. This is the most expensive and time consuming way to fine-tune a model. It requires a lot of compute and data to do this.
+Transformers are deep neural networks with layers, parameters, and weights that process data. Full fine-tuning adjusts **all** these weights across the model, making it the most flexible but also the most resource-intensive method.
 
-- Weights: The parameters of the model that are learned during training. They are used to make predictions.
+- **Weights**: Learned values that guide predictions.
+- **Layers**: Stacked processing units, each with its own weights.
 
-- Layers: The different levels of the model that process the input data. Each layer has its own set of weights and biases.
+> **Weights** control neuron connections and are updated during training to minimize prediction errors.
+>
+> **Backpropagation** adjusts weights by calculating gradients based on loss, enabling the model to learn.
 
-> In neural networks, weights are numerical values that determine the strength of connections between neurons (or nodes). They essentially control how much influence one neuron's output has on another neuron's input. These weights are learned and adjusted during the training process, allowing the network to learn patterns and make predictions.
+**Cons of Full Fine-tuning:**
 
-> Backpropagation is a training algorithm for neural networks that uses a backward pass to adjust model parameters (weights and biases) based on the network's performance error. It's a crucial method for minimizing errors and improving the network's ability to make accurate predictions.
+- High GPU & compute cost
+- Increased energy and hardware requirements
+- Often requires self-hosting infrastructure
 
-**Cons of full parameter fine-tuning:**
+### LoRA (Low-Rank Adaptation) Fine-tuning
 
-- High GPU cost
-- High Energy cost
-- High Hardware cost
-- Self host cost
+LoRA is a **parameter-efficient** technique where the base model’s weights are **frozen**. Instead of updating them, small low-rank matrices are injected into specific layers to capture task-specific adaptations.
+
+For each training step:
+
+- Loss is calculated between predicted vs. expected outputs.
+- Only the added low-rank matrices are updated, not the original model weights.
+
+This drastically reduces compute and memory needs, enabling fine-tuning of large models on modest hardware.
+
+> LoRA = Frozen base model + Trainable low-rank matrices.
+
+It’s ideal when you need efficient domain/task adaptation without the cost of full fine-tuning.
