@@ -36,4 +36,7 @@ pip install uvicorn
 
 # Start FastAPI Server
 uvicorn ollama_api:app --port 8000
+
+# Start docker compose of QDrant
+docker compose up -d
 ```
