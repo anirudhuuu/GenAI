@@ -62,34 +62,35 @@ messages = [
     {"role": "system", "content": SYSTEM_PROMPT},
 ]
 
-query = input("> ")
-messages.append({"role": "user", "content": query})
-
 while True:
-    response = client.chat.completions.create(
-        model="gemini-2.0-flash",
-        response_format={"type": "json_object"},
-        messages=messages
-    )
+    query = input("> ")
+    messages.append({"role": "user", "content": query})
 
-    messages.append({"role": "assistant", "content": response.choices[0].message.content})
-    parsed_response = json.loads(response.choices[0].message.content)
+    while True:
+        response = client.chat.completions.create(
+            model="gemini-2.0-flash",
+            response_format={"type": "json_object"},
+            messages=messages
+        )
 
-    if parsed_response.get("step") == "plan":
-        print(f"🧠: {parsed_response.get("content")}")
-        continue
-    
-    if parsed_response.get("step") == "action":
-        tool_name = parsed_response.get("function")
-        tool_input = parsed_response.get("input")
+        messages.append({"role": "assistant", "content": response.choices[0].message.content})
+        parsed_response = json.loads(response.choices[0].message.content)
 
-        print(f"🔨 Calling Tool: {tool_name} with input: {tool_input}")
-
-        if available_tools.get(tool_name) != False:
-            output = available_tools[tool_name](tool_input)
-            messages.append({"role": "user", "content": json.dumps({ "step": "observe", "output": output })})
+        if parsed_response.get("step") == "plan":
+            print(f"🧠: {parsed_response.get("content")}")
             continue
-    
-    if parsed_response.get("step") == "output":
-        print(f"🤖: {parsed_response.get("content")}")
-        break
+        
+        if parsed_response.get("step") == "action":
+            tool_name = parsed_response.get("function")
+            tool_input = parsed_response.get("input")
+
+            print(f"🔨 Calling Tool: {tool_name} with input: {tool_input}")
+
+            if available_tools.get(tool_name) != False:
+                output = available_tools[tool_name](tool_input)
+                messages.append({"role": "user", "content": json.dumps({ "step": "observe", "output": output })})
+                continue
+        
+        if parsed_response.get("step") == "output":
+            print(f"🤖: {parsed_response.get("content")}")
+            break
