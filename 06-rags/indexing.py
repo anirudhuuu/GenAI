@@ -13,7 +13,7 @@ pdf_path = Path(__file__).parent / "nodejs.pdf"
 
 # Loading
 loader = PyPDFLoader(file_path=pdf_path)
-docs = loader.load() # Read PDF file page-by-page
+docs = loader.load()  # Read PDF file page-by-page
 
 # Chunking
 text_splitter = RecursiveCharacterTextSplitter(
