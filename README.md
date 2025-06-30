@@ -39,4 +39,22 @@ uvicorn ollama_api:app --port 8000
 
 # Start docker compose of QDrant
 docker compose up -d
+
+# Install FastAPI
+pip install fastapi[standard]
+
+# Start FastAPI Server
+fastapi dev server.py
+
+# Install RQ
+pip install rq
+
+# Install uvicorn
+pip install uvicorn
+
+# Run the FastAPI server
+python -m 07-advance-rags.main
+
+# Start the RQ worker
+rq worker --with-scheduler --url redis://valkey:6379
 ```
