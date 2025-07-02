@@ -1,1 +1,0 @@
-The weather in Hyderabad is Partly cloudy +34°C.
