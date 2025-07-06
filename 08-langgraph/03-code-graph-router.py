@@ -15,17 +15,21 @@ client = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
+
 class State(TypedDict):
     user_query: str
     llm_result: str | None
     accuracy_percentage: str | None
     is_coding_question: bool | None
 
+
 class ClassifyMessageResponse(BaseModel):
     is_coding_question: bool
 
+
 class CodeAccuracyResponse(BaseModel):
     accuracy_percentage: str
+
 
 def classify_message(state: State):
     print("⚠️ Classifying message...")
@@ -60,6 +64,7 @@ def classify_message(state: State):
 
     return state
 
+
 def route_query(state: State) -> Literal["general_query", "coding_query"]:
     print("🔄 Routing query...")
 
@@ -67,8 +72,9 @@ def route_query(state: State) -> Literal["general_query", "coding_query"]:
 
     if is_coding:
         return "coding_query"
-    
+
     return "general_query"
+
 
 def general_query(state: State):
     print("💬 Handling general query...")
@@ -88,6 +94,7 @@ def general_query(state: State):
     state['llm_result'] = result
 
     return state
+
 
 def coding_query(state: State):
     print("💻 Handling coding query...")
@@ -114,9 +121,10 @@ def coding_query(state: State):
 
     return state
 
+
 def coding_validate_query(state: State):
     print("✅ Validating coding query...")
-    
+
     query = state['user_query']
     llm_result = state['llm_result']
 
@@ -144,6 +152,7 @@ def coding_validate_query(state: State):
 
     return state
 
+
 graph_builder = StateGraph(State)
 
 # Define the nodes in the graph
@@ -162,6 +171,7 @@ graph_builder.add_edge("coding_validate_query", END)
 
 graph = graph_builder.compile()
 
+
 def main():
     user = input("> ")
 
@@ -176,5 +186,6 @@ def main():
     graph_result = graph.invoke(_state)
 
     print("graph_result: ", graph_result)
+
 
 main()

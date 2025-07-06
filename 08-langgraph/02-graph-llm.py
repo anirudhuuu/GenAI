@@ -11,9 +11,11 @@ client = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
+
 class State(TypedDict):
     query: str
     llm_result: str | None
+
 
 def chat_bot(state: State):
     # Get the query from the state
@@ -34,6 +36,7 @@ def chat_bot(state: State):
 
     return state
 
+
 graph_builder = StateGraph(State)
 
 graph_builder.add_node("chat_bot", chat_bot)
@@ -42,6 +45,7 @@ graph_builder.add_edge(START, "chat_bot")
 graph_builder.add_edge("chat_bot", END)
 
 graph = graph_builder.compile()
+
 
 def main():
     user = input("> ")
@@ -55,5 +59,6 @@ def main():
     graph_result = graph.invoke(_state)
 
     print("graph_result: ", graph_result)
+
 
 main()
