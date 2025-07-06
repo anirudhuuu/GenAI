@@ -9,9 +9,11 @@ client = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
+
 def get_weather(city: str) -> str:
     # API Call to get the weather
     return "42°C"
+
 
 SYSTEM_PROMPT = f"""
     You are a helpful AI Assistant

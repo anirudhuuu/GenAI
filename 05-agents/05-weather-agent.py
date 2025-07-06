@@ -10,6 +10,7 @@ client = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
+
 def get_weather(city: str) -> str:
     url = f"https://wttr.in/{city}?format=%C+%t"
     response = requests.get(url)
@@ -18,6 +19,7 @@ def get_weather(city: str) -> str:
         return f"The weather in {city} is {response.text}."
     else:
         return "Sorry, I couldn't get the weather data for the city"
+
 
 available_tools = {
     "get_weather": get_weather
@@ -73,13 +75,14 @@ while True:
             messages=messages
         )
 
-        messages.append({"role": "assistant", "content": response.choices[0].message.content})
+        messages.append(
+            {"role": "assistant", "content": response.choices[0].message.content})
         parsed_response = json.loads(response.choices[0].message.content)
 
         if parsed_response.get("step") == "plan":
             print(f"🧠: {parsed_response.get("content")}")
             continue
-        
+
         if parsed_response.get("step") == "action":
             tool_name = parsed_response.get("function")
             tool_input = parsed_response.get("input")
@@ -88,9 +91,10 @@ while True:
 
             if available_tools.get(tool_name) != False:
                 output = available_tools[tool_name](tool_input)
-                messages.append({"role": "user", "content": json.dumps({ "step": "observe", "output": output })})
+                messages.append({"role": "user", "content": json.dumps(
+                    {"step": "observe", "output": output})})
                 continue
-        
+
         if parsed_response.get("step") == "output":
             print(f"🤖: {parsed_response.get("content")}")
             break

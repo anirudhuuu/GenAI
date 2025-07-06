@@ -9,9 +9,11 @@ client = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
+
 def get_weather(city: str) -> str:
     # API Call to get the weather
     return "42 degrees C"
+
 
 SYSTEM_PROMPT = f"""
     You are a helpful AI Assistant who is specialized in resolving user query.
@@ -54,10 +56,14 @@ response = client.chat.completions.create(
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": "What is the weather in Hyderabad?"},
         # Chain of thought prompt for weather agent
-        {"role": "assistant", "content": json.dumps({ "step": "plan", "content": "The user is interested in weather data of Hyderabad. So I will use the get_weather tool to get the weather data of Hyderabad." })},
-        {"role": "assistant", "content": json.dumps({ "step": "plan", "content": "From the available tools, I should call get_weather" })},
-        {"role": "assistant", "content": json.dumps({ "step": "action", "function": "get_weather", "input": "Hyderabad" })},
-        {"role": "assistant", "content": json.dumps({ "step": "observe", "content": "24 degrees C" })},
+        {"role": "assistant", "content": json.dumps(
+            {"step": "plan", "content": "The user is interested in weather data of Hyderabad. So I will use the get_weather tool to get the weather data of Hyderabad."})},
+        {"role": "assistant", "content": json.dumps(
+            {"step": "plan", "content": "From the available tools, I should call get_weather"})},
+        {"role": "assistant", "content": json.dumps(
+            {"step": "action", "function": "get_weather", "input": "Hyderabad"})},
+        {"role": "assistant", "content": json.dumps(
+            {"step": "observe", "content": "24 degrees C"})},
         # Chain of thought prompt for weather agent ends here
     ]
 )
