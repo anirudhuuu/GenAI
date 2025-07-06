@@ -16,6 +16,12 @@ api_key = os.getenv("GEMINI_API_KEY")
 
 
 @tool()
+def add_two_numbers(a: int, b: int) -> int:
+    """This tool adds two numbers."""
+    return a + b
+
+
+@tool()
 def get_weather(city: str) -> str:
     """This tool returns the weather data about the given city."""
     url = f"https://wttr.in/{city.lower()}?format=%C+%t"
@@ -27,7 +33,7 @@ def get_weather(city: str) -> str:
         return "Sorry, I couldn't get the weather data for the city"
 
 
-tools = [get_weather]
+tools = [get_weather, add_two_numbers]
 
 
 class State(TypedDict):
@@ -49,7 +55,7 @@ def chatbot(state: State):
     return {"messages": [message]}
 
 
-tool_node = ToolNode(tools=[get_weather])
+tool_node = ToolNode(tools=tools)
 
 graph_builder = StateGraph(State)
 
