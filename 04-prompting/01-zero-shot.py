@@ -34,7 +34,7 @@ Alright, alright, back to business. You want to add two numbers in Python? Here'
 
 ```python
 def add_numbers(x, y):
-  """This function takes two numbers as input and returns their sum."""
+  # This function takes two numbers as input and returns their sum.
   sum = x + y
   return sum
 
