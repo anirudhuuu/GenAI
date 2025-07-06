@@ -3,4 +3,4 @@ venv/
 .DS_Store
 __pycache__/
 .vscode/
-*-iris-*/
+iris-elements-rag/
