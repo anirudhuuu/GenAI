@@ -34,7 +34,8 @@ search_results = vector_db.similarity_search(
 
 # print("search_results: ", search_results)
 
-context = "\n\n".join([f"Page Content: {result.page_content}\nPage Number: {result.metadata['page_label']}\nFile Location: {result.metadata['source']}" for result in search_results])
+context = "\n\n".join(
+    [f"Page Content: {result.page_content}\nPage Number: {result.metadata['page_label']}\nFile Location: {result.metadata['source']}" for result in search_results])
 
 SYSTEM_PROMPT = f"""
     You are a helpful AI assistant who answers user query based on the available context retrieved from a PDF file along with page_contents and page number.
