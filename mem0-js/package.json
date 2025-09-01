@@ -1,0 +1,25 @@
+{
+  "name": "mem0-js-demo",
+  "version": "1.0.0",
+  "description": "Mem0 AI JavaScript demo with Qdrant vector store",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "mem0ai": "^2.1.37",
+    "openai": "^5.16.0"
+  },
+  "keywords": [
+    "mem0",
+    "ai",
+    "memory",
+    "qdrant",
+    "vector-store"
+  ],
+  "author": "",
+  "license": "MIT"
+}
