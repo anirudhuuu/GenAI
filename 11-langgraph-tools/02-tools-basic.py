@@ -8,7 +8,7 @@ from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, START, END
 
 from langchain.chat_models import init_chat_model
-from langchain_core.tools import tool
+from langchain.tools import tool
 
 api_key = os.getenv("GEMINI_API_KEY")
 
