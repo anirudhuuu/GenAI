@@ -9,10 +9,10 @@
     "dev": "node --watch index.js"
   },
   "dependencies": {
-    "axios": ">=1.12.0",
-    "dotenv": "^17.2.1",
-    "mem0ai": "^2.1.37",
-    "openai": "^5.16.0",
+    "axios": ">=1.13.2",
+    "dotenv": "^17.2.3",
+    "mem0ai": "^2.1.38",
+    "openai": "^5.23.2",
     "tar-fs": ">=2.1.4",
     "undici": ">=5.29.0"
   },
